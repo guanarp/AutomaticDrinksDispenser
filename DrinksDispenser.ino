@@ -2,7 +2,7 @@
 #include<LiquidCrystal.h>
 #include "declarations.h"
 
-void setup(){
+void setup() {
   //Serial.begin(9600);
   pinMode(trigPin, OUTPUT); // Ultrasonic ouput (this is the trigger pin)
   pinMode(echoPin, INPUT);  // Ultrasonic input (this is the echo pin)
@@ -12,7 +12,7 @@ void setup(){
   irrecv.enableIRIn(); // the IR reception begins
 }
 
-void loop(){
+void loop() {
 
 // Ultrasonic sensor readings. Edit: this could've been a function a function, but it's only called once again so we left it like that.
   digitalWrite(trigPin,LOW);
@@ -32,8 +32,8 @@ void loop(){
       lcd.setCursor(0,0);
       lcd.print("Glass ready...");
       delay(500);
-      if (irrecv.decode(&results){ 
-        if(results.value==0x00FF02FD) {  // If start button is pressed
+      if (irrecv.decode(&results) { 
+        if (results.value==0x00FF02FD) {  // If start button is pressed
           //Serial.println("Tecla: OK");
           digitalWrite(waterPumpPin,LOW);  //The pump is activated with a low signal
           lcd.setCursor(0,0);
@@ -41,7 +41,7 @@ void loop(){
           //Serial.println("usDistance ");
           //Serial.println(usDistance);
           //Serial.println(" cm");
-          while(usDistance <= 8 and counter<10){ // while there's still a glass and it's been less than 5 seconds
+          while(usDistance <= 8 and counter<10) { // while there's still a glass and it's been less than 5 seconds
             counter = counter + 1;  // because of the delay, this counter is aproximately equivalent to 0.5 seconds
             digitalWrite(trigPin,LOW);
             delayMicroseconds(5);
@@ -57,18 +57,15 @@ void loop(){
         }
         digitalWrite(waterPumpPin, HIGH);
         delay(500);
-       }
+      }
       irrecv.resume();
-    }
-    else{ // Mientras no este presente el vaso
+    } else { // Mientras no este presente el vaso
       digitalWrite(waterPumpPin, HIGH);  // waterPumpPin apagada
       lcd.setCursor(0,0);
       lcd.print("Prendido...");
       delay(500);
-  
     }
-  }
-  else { // There's not enough waters
+  } else { // There's not enough waters
     lcd.clear();
     lcd.setCursor(0,0);  
     lcd.print("Insuficient water");
