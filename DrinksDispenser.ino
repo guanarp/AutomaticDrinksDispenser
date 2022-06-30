@@ -21,26 +21,20 @@ void loop() {
   delayMicroseconds(10);
   usTime = pulseIn(echoPin,HIGH); //the echo pin reads the sound travel time
   usDistance = int(0.017*usTime); //this scalar give us our distance (considering the dispenser distance)
-  //Serial.println(usDistance);
-
   waterLevel = analogRead(A0);
-  //Serial.println(waterLevel);
+  
   if (waterLevel > 370) { // This is our working level.
     lcd.clear();
     counter=0;
-    if (usDistance <= 8) {  //if theres a glass
+    if (usDistance <= 8) {  //if there's a glass
       lcd.setCursor(0,0);
       lcd.print("Glass ready...");
       delay(500);
       if (irrecv.decode(&results) { 
         if (results.value==0x00FF02FD) {  // If start button is pressed
-          //Serial.println("Tecla: OK");
           digitalWrite(waterPumpPin,LOW);  //The pump is activated with a low signal
           lcd.setCursor(0,0);
           lcd.print("loading...");
-          //Serial.println("usDistance ");
-          //Serial.println(usDistance);
-          //Serial.println(" cm");
           while(usDistance <= 8 and counter<10) { // while there's still a glass and it's been less than 5 seconds
             counter = counter + 1;  // because of the delay, this counter is aproximately equivalent to 0.5 seconds
             digitalWrite(trigPin,LOW);
@@ -49,9 +43,6 @@ void loop() {
             delayMicroseconds(10);
             usTime = pulseIn(echoPin,HIGH);
             usDistance = int(0.017*usTime);
-            //Serial.println("usDistance ");
-            //Serial.println(usDistance);
-            //Serial.println(" cm");
             delay(500);
           }
         }
@@ -59,13 +50,13 @@ void loop() {
         delay(500);
       }
       irrecv.resume();
-    } else { // Mientras no este presente el vaso
-      digitalWrite(waterPumpPin, HIGH);  // waterPumpPin apagada
+    } else { // If there's no glass 
+      digitalWrite(waterPumpPin, HIGH);
       lcd.setCursor(0,0);
-      lcd.print("Prendido...");
+      lcd.print("Idle...");
       delay(500);
     }
-  } else { // There's not enough waters
+  } else { // There's not enough water
     lcd.clear();
     lcd.setCursor(0,0);  
     lcd.print("Insuficient water");
